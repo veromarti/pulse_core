@@ -41,7 +41,7 @@
             </div>
             <div class="mb-3">
               <label for="city">City</label>
-              <select class="form-select" name="city">
+              <select id="city" class="form-select" name="city">
                 <option selected disabled>Choose an option</option>
                 <option value="bello">BELLO</option>
                 <option value="envigado">ENVIGADO</option>
@@ -54,18 +54,34 @@
 
             <div class="mb-3">
               <label for="start-date">Start date</label>
-              <input type="date" name="start-date">
+              <input id="start-date" type="date" name="start-date" />
             </div>
 
             <div class="mb-3">
-              <label for="finish-date">Finish date</label>
-              <input type="date" name="finish-date">
+              <label for="end-date">End date</label>
+              <input id="end-date" type="date" name="end-date" />
             </div>
 
-            <button class="btn btn-danger w-100">Create Campaign</button>
+            <button type="submit" class="btn btn-danger w-100">Create Campaign</button>
           </form>
         </div>
       </div>
+    </div>
+
+    <div class="container">
+      <h4 class="card-title text-center mb-2">Donation Campaigns</h4>
+      <table class="table table-stripped">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">NAME</th>
+            <th scope="col">CITY</th>
+            <th scope="col">START DATE</th>
+            <th scope="col">END DATE</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
   </div>
 </div>
