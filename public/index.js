@@ -1,6 +1,7 @@
 import { getCurrentUser } from "./../src/utils/helpers.js";
 import { isAuthenticated } from "./../src/utils/auth.js";
 import LoginView from "./../public/views/LoginView.js";
+import UserHomeView from "./views/UserHomeView.js";
 
 class App {
   constructor() {
@@ -80,9 +81,9 @@ class App {
       case "login":
         this.currentView = new LoginView(this);
         break;
-      //   case "dashboard":
-      //     this.currentView = new DashboardView(this);
-      //     break;
+      case "user":
+        this.currentView = new UserHomeView(this);
+        break;
       //   case "events":
       //     this.currentView = new EventsView(this);
       //     break;

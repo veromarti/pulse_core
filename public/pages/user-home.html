@@ -1,0 +1,54 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h2 class="mb-4">User Dashboard</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Profile -->
+    <div class="col-lg-6 col-md-12 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="container">
+            <h5 class="card-title">My Profile</h5>
+            <p id="user-info">Loading...</p>
+          </div>
+          <div class="container">
+            <h5 class="card-title">Donor Information</h5>
+            <p id="donor-info">Loading...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Ticket -->
+    <div class="col-lg-6 col-md-12 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Create Ticket</h5>
+          <form id="ticket-form">
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Title"
+                id="title"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <textarea
+                class="form-control"
+                placeholder="Description"
+                id="description"
+                required
+              ></textarea>
+            </div>
+            <button class="btn btn-primary w-100">Create Ticket</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

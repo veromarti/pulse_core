@@ -43,6 +43,7 @@ export default class LoginView {
       localStorage.setItem("token", data.token);
 
       alert("Login successful");
+      this.router.navigate("user");
     });
   }
 }

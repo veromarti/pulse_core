@@ -1,6 +1,7 @@
 import express from "express";
 import { verifyToken } from "../middleware/auth.middleware.js";
 import { authorizeRoles } from "../middleware/role.middleware.js";
+import { getProfile } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
@@ -9,12 +10,7 @@ const router = express.Router();
 */
 
 // Ruta protegida
-router.get("/profile", verifyToken, authorizeRoles("USER"), (req, res) => {
-  res.json({
-    message: "User profile",
-    user: req.user
-  });
-});
+router.get("/profile", verifyToken, authorizeRoles("USER"), getProfile);
 
 /*
    USER → Puede crear ticket
