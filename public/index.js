@@ -2,6 +2,7 @@ import { getCurrentUser } from "./../src/utils/helpers.js";
 import { isAuthenticated } from "./../src/utils/auth.js";
 import LoginView from "./../public/views/LoginView.js";
 import UserHomeView from "./views/UserHomeView.js";
+import AdminHomeView from "./views/AdminHomeView.js";
 
 class App {
   constructor() {
@@ -76,13 +77,16 @@ class App {
     this.app.innerHTML = "";
     this.currentRoute = route;
     this.currentParams = params;
-
+    console.log(this.currentRoute)
     switch (route) {
       case "login":
         this.currentView = new LoginView(this);
         break;
       case "user":
         this.currentView = new UserHomeView(this);
+        break;
+      case "admin":
+        this.currentView = new AdminHomeView(this);
         break;
       //   case "events":
       //     this.currentView = new EventsView(this);

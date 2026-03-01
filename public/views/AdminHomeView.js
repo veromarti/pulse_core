@@ -1,4 +1,4 @@
-export default class LoginView {
+export default class AdminHomeView {
   constructor(router) {
     this.router = router;
     this.email = "";
@@ -9,18 +9,12 @@ export default class LoginView {
 
   async render() {
     const app = document.getElementById("app");
-    const mainContent = await fetch(`./../public/pages/login.html`).then((r) =>
+    const mainContent = await fetch(`./../public/pages/admin-home.html`).then((r) =>
       r.text(),
     );
     app.innerHTML = mainContent;
 
     this.attachEventHandlers();
-  }
-
-  parseJwt(token) {
-    const base64Payload = token.split(".")[1];
-    const payload = atob(base64Payload);
-    return JSON.parse(payload);
   }
 
   attachEventHandlers() {
@@ -48,17 +42,8 @@ export default class LoginView {
       // 🔥 Guardar token
       localStorage.setItem("token", data.token);
 
-      const decoded = this.parseJwt(data.token);
-
-      console.log(decoded);
-
-      if (decoded.role === "USER") {
-        this.router.navigate("user");
-      } else if (decoded.role === "ADMIN") {
-        this.router.navigate("admin");
-      } else if (decoded.role === "AGENT") {
-        this.router.navigate("agent");
-      }
+      alert("Login successful");
+      this.router.navigate("user");
     });
   }
 }
