@@ -115,3 +115,5 @@ tickets
 +-------------------------+
 
 Relación embebida para eventos (historial) y referencia para entidades SQL (related). Esto permite consultas híbridas sin duplicar datos SQL.
+
+![Uploading Screenshot 2026-03-02 at 1.15.46 PM.png…]("ejemplo.PNG")
