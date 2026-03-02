@@ -3,6 +3,7 @@ import { isAuthenticated } from "./../src/utils/auth.js";
 import LoginView from "./../public/views/LoginView.js";
 import UserHomeView from "./views/UserHomeView.js";
 import AdminHomeView from "./views/AdminHomeView.js";
+import AgentHomeView from "./views/AgentHomeView.js";
 
 class App {
   constructor() {
@@ -88,9 +89,9 @@ class App {
       case "admin":
         this.currentView = new AdminHomeView(this);
         break;
-      //   case "events":
-      //     this.currentView = new EventsView(this);
-      //     break;
+      case "agent":
+        this.currentView = new AgentHomeView(this);
+        break;
       //   case "events/create":
       //     this.currentView = new CreateEvent(this);
       //     break;

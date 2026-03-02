@@ -47,24 +47,6 @@ export default class AdminHomeView {
           <td>${endDate}</td>
         </tr>`;
     });
-
-    //   const profileData = await profileResponse.json();
-
-    //   console.log(profileData)
-
-    //   document.getElementById("user-info").innerHTML = `
-    //     <strong>Email:</strong> ${profileData.email}<br/>
-    //     <strong>Role:</strong> ${profileData.role}
-    //   `;
-
-    //   const formatedDate = formatDate(profileData.donor.lastDonationDate)
-
-    //   document.getElementById("donor-info").innerHTML = `
-    //     <strong>Donor Status:</strong> ${profileData.donor.status}<br/>
-    //     <strong>Donor Level:</strong> ${profileData.donor.donorLevel}<br/>
-    //     <strong>Last donation date:</strong> ${formatedDate}<br/>
-    //     <strong>City:</strong> ${profileData.donor.city}
-    //   `;
   }
 
   attachEventHandlers() {
