@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía: Endpoints con Express</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #222636;
+    --accent: #7c6dfa;
+    --accent2: #5acca4;
+    --accent3: #eaa2fc;
+    --warn: #fe654f;
+    --text: #e8eaf0;
+    --muted: #7a7f9a;
+    --border: #2e3248;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    line-height: 1.7;
+    padding: 40px 20px 80px;
+  }
+
+  .container { max-width: 860px; margin: 0 auto; }
+
+  header {
+    border-left: 4px solid var(--accent);
+    padding-left: 20px;
+    margin-bottom: 48px;
+  }
+
+  header .tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  header p {
+    color: var(--muted);
+    margin-top: 8px;
+    font-size: 0.95rem;
+  }
+
+  .section {
+    margin-bottom: 40px;
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .section-header {
+    padding: 16px 24px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .section-header h2 {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .section-body { padding: 24px; }
+
+  .section-body p { color: var(--muted); margin-bottom: 16px; font-size: 0.9rem; }
+
+  pre {
+    background: #0a0c12;
+    border-radius: 8px;
+    padding: 20px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.8;
+    border: 1px solid var(--border);
+    position: relative;
+  }
+
+  .file-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    background: var(--border);
+    padding: 3px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  /* Syntax colors */
+  .kw { color: #c792ea; }
+  .fn { color: #82aaff; }
+  .str { color: #c3e88d; }
+  .cm { color: #546e7a; font-style: italic; }
+  .var { color: var(--accent3); }
+  .num { color: var(--accent2); }
+  .method-get { color: #5acca4; font-weight: 700; }
+  .method-post { color: #eaa2fc; font-weight: 700; }
+  .method-put { color: #ffd580; font-weight: 700; }
+  .method-delete { color: #fe654f; font-weight: 700; }
+
+  .methods-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .method-card {
+    padding: 14px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+
+  .method-card .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+
+  .get .badge { background: #1a3d2e; color: #5acca4; }
+  .post .badge { background: #3a1d4a; color: #eaa2fc; }
+  .put .badge { background: #3d2e0a; color: #ffd580; }
+  .delete .badge { background: #3d1a0a; color: #fe654f; }
+
+  .method-card p { color: var(--muted); margin: 0; font-size: 0.82rem; }
+
+  .tip {
+    background: #1a2a20;
+    border: 1px solid #2a4a35;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 0.85rem;
+    color: var(--accent2);
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .tip span { flex-shrink: 0; }
+
+  .structure {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .struct-item {
+    background: #0a0c12;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+  }
+
+  .struct-item .label {
+    font-family: 'Sora', sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  @media (max-width: 600px) {
+    .methods-grid, .structure { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="tag">Guía Rápida</div>
+    <h1>Endpoints con Express.js</h1>
+    <p>Todo lo que necesitas para crear una API REST desde cero.</p>
+  </header>
+
+  <!-- PASO 1 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">1</div>
+      <h2>Instalación y configuración inicial</h2>
+    </div>
+    <div class="section-body">
+      <p>Instala Express y crea el archivo principal de tu servidor.</p>
+      <div class="file-label">terminal</div>
+      <pre>npm init -y
+npm install express</pre>
+
+      <br>
+      <div class="file-label">index.js</div>
+      <pre><span class="kw">const</span> <span class="var">express</span> = <span class="fn">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> <span class="var">app</span> = <span class="fn">express</span>();
+
+<span class="cm">// Permite recibir JSON en el body</span>
+<span class="var">app</span>.<span class="fn">use</span>(<span class="var">express</span>.<span class="fn">json</span>());
+
+<span class="var">app</span>.<span class="fn">listen</span>(<span class="num">3000</span>, () => {
+  <span class="var">console</span>.<span class="fn">log</span>(<span class="str">'Servidor corriendo en http://localhost:3000'</span>);
+});</pre>
+    </div>
+  </div>
+
+  <!-- PASO 2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">2</div>
+      <h2>Los 4 métodos HTTP principales</h2>
+    </div>
+    <div class="section-body">
+      <div class="methods-grid">
+        <div class="method-card get">
+          <div class="badge">GET</div>
+          <p>Obtener / leer datos</p>
+        </div>
+        <div class="method-card post">
+          <div class="badge">POST</div>
+          <p>Crear un nuevo recurso</p>
+        </div>
+        <div class="method-card put">
+          <div class="badge">PUT</div>
+          <p>Actualizar un recurso existente</p>
+        </div>
+        <div class="method-card delete">
+          <div class="badge">DELETE</div>
+          <p>Eliminar un recurso</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 3 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">3</div>
+      <h2>Estructura de un endpoint</h2>
+    </div>
+    <div class="section-body">
+      <p>Todo endpoint tiene esta forma básica:</p>
+      <pre><span class="var">app</span>.<span class="fn">método</span>(<span class="str">'/ruta'</span>, (<span class="var">req</span>, <span class="var">res</span>) => {
+  <span class="cm">// req → lo que llega (body, params, query)</span>
+  <span class="cm">// res → lo que devuelves</span>
+  <span class="var">res</span>.<span class="fn">json</span>({ <span class="var">mensaje</span>: <span class="str">'respuesta'</span> });
+});</pre>
+
+      <br>
+      <p>Formas de enviar datos desde el cliente:</p>
+      <div class="structure">
+        <div class="struct-item">
+          <div class="label">req.body</div>
+          <span style="color:#5acca4">POST / PUT</span><br>
+          <span style="color:#546e7a">Datos en el cuerpo</span><br>
+          <span style="color:#e8eaf0">{ name: "Alice" }</span>
+        </div>
+        <div class="struct-item">
+          <div class="label">req.params</div>
+          <span style="color:#5acca4">Parte de la URL</span><br>
+          <span style="color:#546e7a">/users/:id</span><br>
+          <span style="color:#e8eaf0">req.params.id → "5"</span>
+        </div>
+        <div class="struct-item">
+          <div class="label">req.query</div>
+          <span style="color:#5acca4">Filtros en URL</span><br>
+          <span style="color:#546e7a">/users?role=admin</span><br>
+          <span style="color:#e8eaf0">req.query.role → "admin"</span>
+        </div>
+        <div class="struct-item">
+          <div class="label">req.headers</div>
+          <span style="color:#5acca4">Cabeceras HTTP</span><br>
+          <span style="color:#546e7a">Authorization, etc.</span><br>
+          <span style="color:#e8eaf0">req.headers.authorization</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 4 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">4</div>
+      <h2>CRUD completo — ejemplo con usuarios</h2>
+    </div>
+    <div class="section-body">
+      <pre><span class="cm">// GET — obtener todos los usuarios</span>
+<span class="var">app</span>.<span class="method-get">get</span>(<span class="str">'/users'</span>, (<span class="var">req</span>, <span class="var">res</span>) => {
+  <span class="var">res</span>.<span class="fn">json</span>({ <span class="var">users</span>: [] });
+});
+
+<span class="cm">// GET — obtener un usuario por ID</span>
+<span class="var">app</span>.<span class="method-get">get</span>(<span class="str">'/users/:id'</span>, (<span class="var">req</span>, <span class="var">res</span>) => {
+  <span class="kw">const</span> { <span class="var">id</span> } = <span class="var">req</span>.<span class="var">params</span>;
+  <span class="var">res</span>.<span class="fn">json</span>({ <span class="var">id</span> });
+});
+
+<span class="cm">// POST — crear un usuario</span>
+<span class="var">app</span>.<span class="method-post">post</span>(<span class="str">'/users'</span>, (<span class="var">req</span>, <span class="var">res</span>) => {
+  <span class="kw">const</span> { <span class="var">name</span>, <span class="var">email</span> } = <span class="var">req</span>.<span class="var">body</span>;
+  <span class="var">res</span>.<span class="fn">status</span>(<span class="num">201</span>).<span class="fn">json</span>({ <span class="var">message</span>: <span class="str">'Usuario creado'</span>, <span class="var">name</span>, <span class="var">email</span> });
+});
+
+<span class="cm">// PUT — actualizar un usuario</span>
+<span class="var">app</span>.<span class="method-put">put</span>(<span class="str">'/users/:id'</span>, (<span class="var">req</span>, <span class="var">res</span>) => {
+  <span class="kw">const</span> { <span class="var">id</span> } = <span class="var">req</span>.<span class="var">params</span>;
+  <span class="kw">const</span> <span class="var">data</span> = <span class="var">req</span>.<span class="var">body</span>;
+  <span class="var">res</span>.<span class="fn">json</span>({ <span class="var">message</span>: <span class="str">`Usuario ${id} actualizado`</span>, <span class="var">data</span> });
+});
+
+<span class="cm">// DELETE — eliminar un usuario</span>
+<span class="var">app</span>.<span class="method-delete">delete</span>(<span class="str">'/users/:id'</span>, (<span class="var">req</span>, <span class="var">res</span>) => {
+  <span class="kw">const</span> { <span class="var">id</span> } = <span class="var">req</span>.<span class="var">params</span>;
+  <span class="var">res</span>.<span class="fn">json</span>({ <span class="var">message</span>: <span class="str">`Usuario ${id} eliminado`</span> });
+});</pre>
+    </div>
+  </div>
+
+  <!-- PASO 5 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">5</div>
+      <h2>Organizar con Router (buenas prácticas)</h2>
+    </div>
+    <div class="section-body">
+      <p>Cuando tienes muchos endpoints, sepáralos en archivos por recurso.</p>
+      <div class="file-label">routes/users.js</div>
+      <pre><span class="kw">const</span> <span class="var">router</span> = <span class="fn">require</span>(<span class="str">'express'</span>).<span class="fn">Router</span>();
+
+<span class="var">router</span>.<span class="method-get">get</span>(<span class="str">'/'</span>, (<span class="var">req</span>, <span class="var">res</span>) => <span class="var">res</span>.<span class="fn">json</span>({ <span class="var">users</span>: [] }));
+<span class="var">router</span>.<span class="method-post">post</span>(<span class="str">'/'</span>, (<span class="var">req</span>, <span class="var">res</span>) => <span class="var">res</span>.<span class="fn">status</span>(<span class="num">201</span>).<span class="fn">json</span>({ <span class="var">message</span>: <span class="str">'Creado'</span> }));
+<span class="var">router</span>.<span class="method-put">put</span>(<span class="str">'/:id'</span>, (<span class="var">req</span>, <span class="var">res</span>) => <span class="var">res</span>.<span class="fn">json</span>({ <span class="var">message</span>: <span class="str">'Actualizado'</span> }));
+<span class="var">router</span>.<span class="method-delete">delete</span>(<span class="str">'/:id'</span>, (<span class="var">req</span>, <span class="var">res</span>) => <span class="var">res</span>.<span class="fn">json</span>({ <span class="var">message</span>: <span class="str">'Eliminado'</span> }));
+
+<span class="var">module</span>.<span class="var">exports</span> = <span class="var">router</span>;</pre>
+
+      <br>
+      <div class="file-label">index.js</div>
+      <pre><span class="kw">const</span> <span class="var">usersRouter</span> = <span class="fn">require</span>(<span class="str">'./routes/users'</span>);
+
+<span class="cm">// Todos los endpoints de users quedan bajo /users</span>
+<span class="var">app</span>.<span class="fn">use</span>(<span class="str">'/users'</span>, <span class="var">usersRouter</span>);</pre>
+
+      <div class="tip">
+        <span>💡</span>
+        <span>Con esto <strong>/users</strong> llama a <code>router.get('/')</code> y <strong>/users/5</strong> llama a <code>router.put('/:id')</code> automáticamente.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 6 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">6</div>
+      <h2>Códigos de respuesta más usados</h2>
+    </div>
+    <div class="section-body">
+      <pre><span class="var">res</span>.<span class="fn">status</span>(<span class="num">200</span>).<span class="fn">json</span>({})  <span class="cm">// OK — respuesta exitosa (default)</span>
+<span class="var">res</span>.<span class="fn">status</span>(<span class="num">201</span>).<span class="fn">json</span>({})  <span class="cm">// Created — recurso creado exitosamente</span>
+<span class="var">res</span>.<span class="fn">status</span>(<span class="num">400</span>).<span class="fn">json</span>({})  <span class="cm">// Bad Request — datos inválidos del cliente</span>
+<span class="var">res</span>.<span class="fn">status</span>(<span class="num">401</span>).<span class="fn">json</span>({})  <span class="cm">// Unauthorized — no autenticado</span>
+<span class="var">res</span>.<span class="fn">status</span>(<span class="num">403</span>).<span class="fn">json</span>({})  <span class="cm">// Forbidden — sin permisos</span>
+<span class="var">res</span>.<span class="fn">status</span>(<span class="num">404</span>).<span class="fn">json</span>({})  <span class="cm">// Not Found — recurso no existe</span>
+<span class="var">res</span>.<span class="fn">status</span>(<span class="num">500</span>).<span class="fn">json</span>({})  <span class="cm">// Internal Server Error — error en el servidor</span></pre>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
